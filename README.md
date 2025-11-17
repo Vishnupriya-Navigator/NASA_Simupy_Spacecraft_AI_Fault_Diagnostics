@@ -112,6 +112,7 @@ Spacecraft_AI_Fault_Diagnostics/
 ├── requirements.txt
 └── README.md
 
+## **INSTALLATION**
 
 git clone https://github.com/<your-username>/Spacecraft_AI_Fault_Diagnostics
 cd Spacecraft_AI_Fault_Diagnostics
