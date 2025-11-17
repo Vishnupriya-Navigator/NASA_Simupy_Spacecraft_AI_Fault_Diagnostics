@@ -8,12 +8,10 @@
 
 ---
 
-## **Abstract**
+## **1. Abstract**
 
 Modern spacecraft rely heavily on autonomous onboard software to ensure safe guidance, navigation, control, thermal balance, power stability, and communications.  
 Small deviations in telemetry can indicate critical faults that must be detected early.
-
-This repository contains the **complete implementation** for our paper:
 
 ### **AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using SimuPy and Random Forest**  
 *(Submitted to the IEEE Aerospace Conference, 2026 – Montana)*
@@ -30,13 +28,37 @@ All results in the paper can be reproduced exactly using this repository.
 
 ---
 
-## 🛰 **System Architecture**
+## 🛰 **2. System Architecture**
 
-*(Insert your architecture diagram in `figures/architecture.png`)*
+Figure 1 illustrates the high-level architecture of the framework.
+
+**Figure 1 – System Architecture**
+
+![Architecture](figures/architecture.png)
+
+At a high level, the system operates as follows:
+
+1. **SimuPy-Flight Vehicle Simulation**  
+   A NASA SimuPy-Flight attitude-dynamics case is executed to simulate spacecraft motion, producing raw telemetry streams (e.g., angular rates, quaternion attitude).
+
+2. **Telemetry Extraction Layer**  
+   Selected signals are extracted and normalized into a consistent tabular format. This layer can be extended to add additional subsystems (e.g., power, thermal, communications).
+
+3. **Fault Injection Engine**  
+   Controlled synthetic faults are injected into the telemetry to emulate realistic anomalies, enabling supervised learning with ground-truth labels.
+
+4. **Dataset Builder**  
+   Telemetry and fault labels are merged into a consolidated dataset suitable for training and evaluation of the Random Forest classifier.
+
+5. **Random Forest Fault Classifier**  
+   A Random Forest model is trained to discriminate between nominal and faulty behavior and provide fault probabilities.
+
+6. **Runtime Monitor**  
+   A light-weight runtime module consumes telemetry streams and emits fault predictions and associated probabilities. This component is designed for potential integration into onboard fault management or ground-based monitoring systems.
 
 ---
 
-##  **Pipeline Structure**
+##  **3. Pipeline Structure**
 
 The following diagram represents the processing pipeline:
 
@@ -77,7 +99,7 @@ The following diagram represents the processing pipeline:
 ```
 ---
 
-## **Repository Structure**
+## **4. Repository Structure**
 
 ```plaintext
 Spacecraft_AI_Fault_Diagnostics/
@@ -109,20 +131,20 @@ Spacecraft_AI_Fault_Diagnostics/
 ```
 ---
 
-## **Installation**
+## **5. Installation**
 
-### **1. Clone repository**
+### **. Clone repository**
 ```bash
 git clone https://github.com/<your-username>/Spacecraft_AI_Fault_Diagnostics
 cd Spacecraft_AI_Fault_Diagnostics
 ```
 
-### **2. Create virtual environment**
+### ** Create virtual environment**
 ```bash
 python3 -m venv .venv
 ```
 
-### **3. Activate environment**
+### ** Activate environment**
 
 **Mac / Linux**
 ```bash
@@ -134,7 +156,7 @@ source .venv/bin/activate
 .venv\Scripts\Activate.ps1
 ```
 
-### **4. Install dependencies**
+### ** Install dependencies**
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
@@ -142,82 +164,177 @@ pip install -r requirements.txt
 
 ---
 
-## **Usage**
+## 6. Usage
 
-### **1. Run NASA SimuPy-Flight Streaming Probe**
+This section summarizes the typical end-to-end workflow used in the paper.
+
+### 6.1 Probe SimuPy-Flight telemetry
+
+Use the probe script to verify that SimuPy-Flight can be executed and that telemetry is accessible:
+
 ```bash
 python -m scripts.probe_sf_stream --hz 10 --seconds 5
 ```
 
-**With fault injection**
+To include a simple example of fault injection in the stream:
+
 ```bash
 python -m scripts.probe_sf_stream --hz 10 --seconds 5 --fault bias
 ```
 
----
+This step is primarily for validation and debugging; the main dataset generation path is described below.
 
-### **2. Generate Dataset (SimuPy + Fault Injection)**
+### 6.2 Generate labeled dataset (SimuPy + fault injection)
+
+The dataset generation script runs SimuPy-Flight, applies configured fault injections, and writes labeled CSV files:
+
 ```bash
 python -m scripts.generate_dataset     --from-simupyflight     --cycles 30     --fault-types bias drift dropout     --output data/simupyflight/
 ```
 
----
+Typical outputs include:
 
-### **3. Train Random Forest Classifier**
+- `raw_telemetry.csv` – baseline signals from SimuPy-Flight.  
+- `fault_injected.csv` – telemetry after applying fault injection operators.  
+- `labels.csv` – binary or multi-class labels indicating nominal vs. fault conditions.  
+- `metadata.json` – configuration details (fault timing, magnitude, seed, etc.).  
+
+### 6.3 Train Random Forest classifier
+
+Once the dataset is generated, the Random Forest model can be trained:
+
 ```bash
 python -m scripts.train_rf --input data/simupyflight/
 ```
 
----
+This script trains the classifier and typically produces:
 
-### **4. Run Real-Time Fault Monitor**
+- `rf_model.pkl` – serialized Random Forest model.  
+- `confusion_matrix.png` – confusion matrix for the evaluation set.  
+- `feature_importance.png` – global feature importance ranking produced by the model.  
+
+### 6.4 Run runtime fault monitor
+
+The runtime monitor consumes live or replayed telemetry, loads the trained model, and prints/logs fault probabilities:
+
 ```bash
 python -m framework.runtime_monitor --model rf_model.pkl
 ```
 
----
-
-## **Experimental Results (Placeholder)**
-
-| Metric     | Value |
-|------------|-------|
-| Accuracy   | TBD   |
-| Precision  | TBD   |
-| Recall     | TBD   |
-| F1 Score   | TBD   |
+The monitor is designed to be lightweight and interpretable, making it suitable for further integration into an onboard fault management system or ground-based monitoring console.
 
 ---
 
-## **How to Reproduce Results**
+## 7. Experimental Setup and Methodology
 
-### **1. Generate SimuPy-Flight telemetry**
+The methodology implemented in this repository is aligned with the paper and can be summarized as follows:
+
+1. **Simulation environment**  
+   A SimuPy-Flight attitude dynamics model is used as the primary source of telemetry. The simulation is configured to produce representative rotational motion and associated state variables.
+
+2. **Telemetry selection and preprocessing**  
+   The telemetry pipeline selects key variables such as angular rates (p, q, r) and quaternion attitude components. Signals are optionally normalized or transformed prior to model training.
+
+3. **Fault taxonomy and injection**  
+   The fault engine supports multiple classes of spacecraft-like anomalies, including:
+   - Bias faults (step changes in sensor readings)  
+   - Drift faults (slow, time-dependent deviation)  
+   - Dropout (temporary loss of signal)  
+   - Additional fault modes (spike, saturation, etc.) can be added in `faults.py`.
+
+   Faults are applied over specified time windows, with parameters documented in `metadata.json` for reproducibility.
+
+4. **Dataset construction**  
+   The dataset builder merges nominal and faulty segments, constructs feature vectors, and assigns labels. The resulting dataset can be used for both supervised classification and analysis of feature relevance.
+
+5. **Model training and validation**  
+   A Random Forest classifier is used as the primary model due to its:
+   - Robust performance on tabular telemetry data.
+   - Ability to handle nonlinear decision boundaries.
+   - Interpretability via feature importance metrics.
+
+6. **Runtime evaluation**  
+   The runtime monitor simulates deployment conditions by processing telemetry streams and generating fault probabilities over time. This allows measurement of:
+   - Detection latency.
+   - False alarm rate.
+   - Stability of predictions in the presence of noise.
+
+For detailed derivations, assumptions, and additional experimental context, refer to the full paper.
+
+---
+
+## 8. Results
+
+The following metrics are representative of the results reported in the associated paper for the evaluated scenarios.
+
+### 8.1 Classification metrics
+
+**Table 1 – Classification performance (example configuration)**
+
+| Metric             | Result        |
+|--------------------|--------------|
+| ROC-AUC            | 1.000        |
+| PR-AUC             | 1.000        |
+| Detection latency  | ≈ 0.70 s     |
+| False alarm rate   | 0 per hour   |
+| Confusion matrix   | 0 FP / 0 FN  |
+
+### 8.2 Figures
+
+**Figure 2 – Feature Importances (Random Forest)**  
+![Feature Importances](figures/feature_importance.png)
+
+This figure highlights the most influential features contributing to the RF decisions, enabling subsystem-level interpretability.
+
+**Figure 3 – Confusion Matrix**  
+![Confusion Matrix](figures/confusion_matrix.png)
+
+The confusion matrix provides a visual summary of classification performance over the evaluation set.
+
+If additional figures (e.g., ROC curves, PR curves, probability vs. time) are produced during experimentation, they should be added to `figures/` and referenced here with appropriate captions.
+
+---
+
+## 9. Reproducibility Guide
+
+This section provides a canonical sequence of commands to reproduce the core results.
+
+### 9.1 Generate nominal and faulty telemetry
+
 ```bash
 python -m scripts.generate_simupy_dataset --seconds 60 --hz 50 --out data/raw/sf_nominal.csv
 
 python -m scripts.generate_simupy_dataset --seconds 60 --hz 50     --fault bias --fault-start 10 --fault-end 20     --out data/raw/sf_bias.csv
 ```
 
-### **2. Merge datasets**
+(Adjust durations, sampling frequency, and fault parameters as required.)
+
+### 9.2 Merge datasets and build final training set
+
 ```bash
 python -m scripts.generate_dataset
 ```
 
-### **3. Train Random Forest model**
+### 9.3 Train the Random Forest model
+
 ```bash
 python -m scripts.train_rf
 ```
 
-### **4. Evaluate**
+### 9.4 Evaluate the model
+
 ```bash
 python -m scripts.evaluate
 ```
 
-### **5. Generate PR / ROC curves**
+### 9.5 Generate PR and ROC curves (if implemented)
+
 ```bash
 python -m scripts.metrics_roc_pr
 ```
 
-### **6. Measure latency + false alarm rate**
+### 9.6 Measure latency and false alarm rate
+
 ```bash
 python -m scripts.latency_eval
 python -m scripts.false_alarm_rate
@@ -225,14 +342,56 @@ python -m scripts.false_alarm_rate
 
 ---
 
-## **License**
+## 10. Limitations and Future Work
 
-This project is released under the **MIT License**.  
-NASA SimuPy-Flight is used under its original **NASA Open Source Agreement**.
+- The current implementation focuses primarily on attitude-dynamics telemetry. Extending the adapter and telemetry generator to cover power, thermal, and communications subsystems would broaden applicability.
+- Fault injection is based on parameterized synthetic models (e.g., bias, drift). Incorporating historical mission data or higher-fidelity fault models would strengthen external validity.
+- Only Random Forest is implemented in this repository. Future work may explore additional interpretable models or hybrid approaches, provided they remain suitable for safety-critical deployment.
+
+These and additional directions are discussed in more detail in the associated paper.
 
 ---
 
-## **Contact**
+## 11. License
 
-For questions related to the paper or codebase, please contact:  
-**Vishnupriya S. Devarajulu**
+This repository contains two categories of software:
+
+1. **Project source code (this repository)**  
+   Unless otherwise noted in individual files, the source code in this repository is released under the terms of the **MIT License**. The full license text is provided in the `LICENSE` file at the root of the repository.
+
+2. **NASA SimuPy-Flight and related dependencies**  
+   This project depends on NASA’s SimuPy-Flight toolkit, which is distributed separately by NASA under its own license (e.g., NASA Open Source Agreement or similar terms).  
+   Users must obtain, install, and comply with the licensing terms of SimuPy-Flight and any associated NASA software independently of this repository.
+
+Users are responsible for reviewing and complying with the licenses for all third-party components before use in production or mission environments.
+
+---
+
+## 12. Citation
+
+If you use this repository or build upon this work in an academic, research, or industrial context, please cite the associated paper:
+
+> V. S. Devarajulu, “AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using SimuPy and Random Forest,” IEEE Aerospace Conference, Montana, 2026.
+
+A BibTeX entry can be defined as:
+
+```bibtex
+@inproceedings{devarajulu2026simupy,
+  author    = {Vishnupriya S. Devarajulu},
+  title     = {AI-Driven Fault Detection \& Reliability Diagnostics for Spacecraft Using SimuPy and Random Forest},
+  booktitle = {Proceedings of the IEEE Aerospace Conference},
+  year      = {2026},
+  address   = {Montana, USA}
+}
+```
+
+---
+
+## 13. Contact
+
+For questions related to this repository or the associated research, please contact:
+
+**Vishnupriya S. Devarajulu**  
+Software Engineer, USA  
+Email: priyadevarajulu@ieee.org
+
