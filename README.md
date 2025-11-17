@@ -1,6 +1,9 @@
 AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using SimuPy and Random Forest
 Reproducible Architecture • NASA SimuPy-Flight Integration • Random Forest Anomaly Detection • Conference-Ready Codebase
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17626179.svg)](https://doi.org/10.5281/zenodo.17626179)
+
+
 🛰️ Overview
 
 This repository contains the complete implementation for the paper:
