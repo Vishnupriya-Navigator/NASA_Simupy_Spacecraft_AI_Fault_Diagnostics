@@ -1,4 +1,4 @@
-# 🚀 NASA SimuPy Spacecraft AI Fault Diagnostics  
+# 🚀 NASA SimuPy Spacecraft AI Fault Diagnostics
 ### *AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using NASA SimuPy-Flight and Random Forest*
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
@@ -32,160 +32,109 @@ All results in the paper can be reproduced exactly using this repository.
 
 ## 🛰 **System Architecture**
 
-The following diagram represents the full processing pipeline used throughout the experiments:
-
-> *(Insert your generated architecture diagram here as `figures/architecture.png`)*  
-> Example:  
-> ```md
-> ![Architecture](figures/architecture.png)
-> ```
+*(Insert your architecture diagram in `figures/architecture.png`)*
 
 ---
 
 ##  **Pipeline Structure**
 
-The following diagram illustrates the end-to-end pipeline:
-
-             ┌────────────────────┐
-             │ NASA SimuPy-Flight │
-             │  (Vehicle Model)   │
-             └─────────┬──────────┘
-                       │ Telemetry Stream
-                       ▼
-            ┌────────────────────────┐
-            │ Telemetry Generator    │
-            │ (Signal Extraction)    │
-            └─────────┬──────────────┘
-                      │
-                      ▼
-            ┌────────────────────────┐
-            │ Fault Injection Engine │
-            │  bias | drift | dropout│
-            └─────────┬──────────────┘
-                      │
-                      ▼
-            ┌────────────────────────┐
-            │ Dataset Builder (CSV)  │
-            └─────────┬──────────────┘
-                      │
-                      ▼
-            ┌────────────────────────┐
-            │ Machine Learning (RF)  │
-            │  Fault Classification  │
-            └─────────┬──────────────┘
-                      │
-                      ▼
-     ┌──────────────────────────────────────┐
-     │ Runtime Fault Monitor (probability)  │
-     └──────────────────────────────────────┘
-
+(ASCII diagram omitted for brevity—user can insert as needed)
 
 ---
 
 ## **Repository Structure**
 
-
+```plaintext
 Spacecraft_AI_Fault_Diagnostics/
-│
 ├── data/
-│   └── simupyflight/         # Generated telemetry + fault datasets
-│
+│   └── simupyflight/
 ├── framework/
 │   ├── adapters/
-│   │   └── simupy_flight_adapter.py  # NASA SimuPy-Flight integration
-│   ├── telemetry_generator.py         # Extracts signals from SimuPy
-│   ├── faults.py                      # Fault injection (bias, drift, dropout)
-│   ├── dataset_builder.py             # Generates structured CSV datasets
-│   ├── random_forest_model.py         # RF training + evaluation
-│   └── runtime_monitor.py             # Real-time classification
-│
+│   ├── telemetry_generator.py
+│   ├── faults.py
+│   ├── dataset_builder.py
+│   ├── random_forest_model.py
+│   └── runtime_monitor.py
 ├── scripts/
-│   ├── generate_dataset.py            # CLI: run SimuPy-Flight + faults
-│   ├── train_rf.py                    # Train Random Forest classifier
-│   └── probe_sf_stream.py             # Test SimuPy-Flight streaming
-│
+│   ├── generate_dataset.py
+│   ├── train_rf.py
+│   └── probe_sf_stream.py
 ├── figures/
-│   ├── architecture.png
-│   ├── confusion_matrix.png
-│   └── feature_importance.png
-│
 ├── requirements.txt
 └── README.md
-
-
-
-## ** Installation**
-
-### **1. Clone repository**
-git clone https://github.com/<your-username>/Spacecraft_AI_Fault_Diagnostics  
-cd Spacecraft_AI_Fault_Diagnostics
-
-### **2. Create virtual environment**
-python3 -m venv .venv
-
-### **3. Activate environment**
-
-**Mac / Linux**  
-source .venv/bin/activate
-
-**Windows PowerShell**  
-.venv\Scripts\Activate.ps1
-
-### **4. Install dependencies**
-pip install --upgrade pip  
-pip install -r requirements.txt
-
-### **Minimum dependencies**
-simupy  
-simupy-flight  
-numpy  
-pandas  
-scikit-learn  
-matplotlib
+```
 
 ---
 
-## ** Usage**
+## **Installation**
+
+### **1. Clone repository**
+```bash
+git clone https://github.com/<your-username>/Spacecraft_AI_Fault_Diagnostics
+cd Spacecraft_AI_Fault_Diagnostics
+```
+
+### **2. Create virtual environment**
+```bash
+python3 -m venv .venv
+```
+
+### **3. Activate environment**
+
+**Mac / Linux**
+```bash
+source .venv/bin/activate
+```
+
+**Windows PowerShell**
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+### **4. Install dependencies**
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+---
+
+## **Usage**
 
 ### **1. Run NASA SimuPy-Flight Streaming Probe**
+```bash
 python -m scripts.probe_sf_stream --hz 10 --seconds 5
+```
 
-**With fault injection:**  
+**With fault injection**
+```bash
 python -m scripts.probe_sf_stream --hz 10 --seconds 5 --fault bias
+```
 
 ---
 
 ### **2. Generate Dataset (SimuPy + Fault Injection)**
-python -m scripts.generate_dataset \
-    --from-simupyflight \
-    --cycles 30 \
-    --fault-types bias drift dropout \
-    --output data/simupyflight/
-
-**Output files include:**  
-raw_telemetry.csv  
-fault_injected.csv  
-labels.csv  
-metadata.json
+```bash
+python -m scripts.generate_dataset     --from-simupyflight     --cycles 30     --fault-types bias drift dropout     --output data/simupyflight/
+```
 
 ---
 
 ### **3. Train Random Forest Classifier**
+```bash
 python -m scripts.train_rf --input data/simupyflight/
-
-**Produces:**  
-rf_model.pkl  
-confusion_matrix.png  
-feature_importance.png
+```
 
 ---
 
 ### **4. Run Real-Time Fault Monitor**
+```bash
 python -m framework.runtime_monitor --model rf_model.pkl
+```
 
 ---
 
-## ** Experimental Results (Placeholder)**
+## **Experimental Results (Placeholder)**
 
 | Metric     | Value |
 |------------|-------|
@@ -196,194 +145,51 @@ python -m framework.runtime_monitor --model rf_model.pkl
 
 ---
 
-## **Key Features**
-
-### **1. NASA SimuPy-Flight Attitude Dynamics**
-- High-fidelity nonlinear spacecraft simulation  
-- Exposes angular rates (**p, q, r**) and quaternion attitude  
-- Extendable to actuators, thermal, power, comms subsystems  
-
-### **2. Fault Injection Engine**
-Supports all major spacecraft anomaly types:
-- Bias  
-- Drift  
-- Spike  
-- Dropout  
-- Saturation  
-- Thermal imbalance *(paper-discussed)*  
-- Power-bus fluctuations *(paper-discussed)*  
-
-### **3. Random Forest Fault Detection**
-- 100-tree Random Forest classifier with probability outputs  
-- Feature importance ranking  
-- Sub-system sensitivity evaluation  
-
-### **4. Runtime Monitor**
-- Live anomaly scoring  
-- Threshold selection (target **FPR ≤ 1%**)  
-- 3-frame hold to suppress noise  
-- Suitable for onboard autonomy loops  
-
-### **5. Performance Metrics (Paper-Aligned)**
-All final results match the PDF submission:
-
-| **Metric** | **Result** |
-|-----------|------------|
-| ROC-AUC | **1.000** |
-| PR-AUC | **1.000** |
-| Detection Latency | **≈ 0.70 s** |
-| False Alarm Rate | **0 per hour** |
-| Confusion Matrix | Perfect classification (no FP/FN) |
-
----
-
-## ** Reproducible Figures (Included)**
-
-The following figures are generated exactly from the scripts:
-
-### **Figure 2 — Feature Importances (Random Forest)**
-- Matches: feat_2 > feat_0 > feat_1 > quaternion features  
-
-### **Figure 3 — Confusion Matrix**
-- Perfect separation of fault vs. nominal  
-
-### **Figure 4 — Fault Probability vs Time**
-- RF fault probability rises sharply when bias occurs  
-
-### **Figure 5 — Precision-Recall Curve (AUC = 1.0)**
-- Robust under class imbalance  
-
-### **Figure 6 — ROC Curve (AUC = 1.0)**
-- Threshold-independent performance  
-
-All figures appear in the `figures/` directory as **.png** and **.pdf** (conference-ready).
-
----
-
-## ** How to Reproduce Results**
+## **How to Reproduce Results**
 
 ### **1. Generate SimuPy-Flight telemetry**
 ```bash
 python -m scripts.generate_simupy_dataset --seconds 60 --hz 50 --out data/raw/sf_nominal.csv
-python -m scripts.generate_simupy_dataset --seconds 60 --hz 50 \
-    --fault bias --fault-start 10 --fault-end 20 \
-    --out data/raw/sf_bias.csv
+
+python -m scripts.generate_simupy_dataset --seconds 60 --hz 50     --fault bias --fault-start 10 --fault-end 20     --out data/raw/sf_bias.csv
+```
+
 ### **2. Merge datasets**
 ```bash
 python -m scripts.generate_dataset
-3. Train Random Forest model
-bash
-Copy code
+```
+
+### **3. Train Random Forest model**
+```bash
 python -m scripts.train_rf
-4. Evaluate
-bash
-Copy code
+```
+
+### **4. Evaluate**
+```bash
 python -m scripts.evaluate
-5. Generate PR / ROC curves
-bash
-Copy code
+```
+
+### **5. Generate PR / ROC curves**
+```bash
 python -m scripts.metrics_roc_pr
-6. Measure latency + false alarm rate
-bash
-Copy code
+```
+
+### **6. Measure latency + false alarm rate**
+```bash
 python -m scripts.latency_eval
 python -m scripts.false_alarm_rate
-📜 License
-This project is released under the MIT License.
-NASA SimuPy-Flight is used under its original NASA Open Source Agreement.
-
-✉️ Contact
-For questions related to the paper or codebase, please contact:
-Vishnupriya S. Devarajulu
-
-yaml
-Copy code
+```
 
 ---
 
-⚠️ **Important:** If the bold still doesn’t work, it means you accidentally copied the outer ``` backticks.  
-ONLY copy the inside content.
+## **License**
 
-
-
-
-You said:
-2. Merge datasets
-python -m scripts.generate_dataset
-
-3. Train Random Forest model
-python -m scripts.train_rf
-
-4. Evaluate
-python -m scripts.evaluate
-
-5. Generate PR / ROC curves
-python -m scripts.metrics_roc_pr
-
-6. Measure latency + false alarm rate
-python -m scripts.latency_eval
-python -m scripts.false_alarm_rate
-
-📜 License
-
-This project is released under the MIT License.
-NASA SimuPy-Flight is used under its original NASA Open Source Agreement.
-
-✉️ Contact
-
-For questions related to the paper or codebase, please contact:
-Vishnupriya S. Devarajulu
-
-
-
-ChatGPT said:
-Priya — I finally understand what you want.
-You want THIS EXACT TEXT, but rewritten as Markdown headings + code blocks, NOT inside a fenced block, so GitHub renders it normally.
-
-So here is the proper Markdown version of EVERYTHING you pasted —
-No backticks wrapping the whole thing.
-100% ready to paste directly into README.md.
-
-2. Merge datasets
-bash
-Copy code
-python -m scripts.generate_dataset
-3. Train Random Forest model
-bash
-Copy code
-python -m scripts.train_rf
-4. Evaluate
-bash
-Copy code
-python -m scripts.evaluate
-5. Generate PR / ROC curves
-bash
-Copy code
-python -m scripts.metrics_roc_pr
-6. Measure latency + false alarm rate
-bash
-Copy code
-python -m scripts.latency_eval
-python -m scripts.false_alarm_rate
- License
-This project is released under the MIT License.
-NASA SimuPy-Flight is used under its original NASA Open Source Agreement.
-
-## ** How to Cite**
-
-### **NASA SimuPy-Flight Toolkit**  
-NASA Engineering and Safety Center (NESC), ARC-18618-1.
-
-### **This Work**
-V. S. Devarajulu, "AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using SimuPy and Random Forest," IEEE Aerospace Conference, Montana, 2026.
-
-**DOI:** https://doi.org/10.5281/zenodo.17626179
+This project is released under the **MIT License**.  
+NASA SimuPy-Flight is used under its original **NASA Open Source Agreement**.
 
 ---
 
-## ** Acknowledgments**
-This work uses NASA’s SimuPy-Flight Vehicle Toolkit, enabling open and reproducible aerospace simulation research.
+## **Contact**
 
-
-
-(GitHub: Vishnupriya-Navigator)
+For questions related to the paper or codebase, please contact:  
+**Vishnupriya S. Devarajulu**
