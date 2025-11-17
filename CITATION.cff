@@ -1,6 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this repository, please cite it as below."
 title: "AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using NASA SimuPy and Random Forest"
+doi: 10.5281/zenodo.17626179
 type: software
 version: "1.0.0"
 authors:
