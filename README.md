@@ -416,6 +416,7 @@ A BibTeX entry can be defined as:
 For questions related to this repository or the associated research, please contact:
 
 **Vishnupriya S. Devarajulu**  
-Software Engineer, USA  
+Software Engineer | AI & ML Researcher, USA  
 Email: priyadevarajulu@ieee.org
+Github: Vishnupriya-Navigator
 
