@@ -110,7 +110,7 @@ Spacecraft_AI_Fault_Diagnostics/
 │   └── feature_importance.png
 │
 ├── requirements.txt
-└── README.md ```
+└── README.md
 
 
 
