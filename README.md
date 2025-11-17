@@ -32,8 +32,6 @@ All results in the paper can be reproduced exactly using this repository.
 
 Figure 1 illustrates the high-level architecture of the framework.
 
-**Figure 1 – System Architecture**
-
 ![Architecture](figures/architecture.png)
 
 At a high level, the system operates as follows:
