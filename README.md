@@ -112,134 +112,104 @@ Spacecraft_AI_Fault_Diagnostics/
 ├── requirements.txt
 └── README.md
 
-Installation
 
-Follow these steps to install and set up the environment.
+## ** Installation**
 
-1. Clone repository
-
-git clone https://github.com/<your-username>/Spacecraft_AI_Fault_Diagnostics
+### **1. Clone repository**
+git clone https://github.com/<your-username>/Spacecraft_AI_Fault_Diagnostics  
 cd Spacecraft_AI_Fault_Diagnostics
 
+### **2. Create virtual environment**
 python3 -m venv .venv
+
+### **3. Activate environment**
+
+**Mac / Linux**  
 source .venv/bin/activate
 
+**Windows PowerShell**  
+.venv\Scripts\Activate.ps1
+
+### **4. Install dependencies**
+pip install --upgrade pip  
 pip install -r requirements.txt
 
+### **Minimum dependencies**
+simupy  
+simupy-flight  
+numpy  
+pandas  
+scikit-learn  
+matplotlib
+
+---
+
+## ** Usage**
+
+### **1. Run NASA SimuPy-Flight Streaming Probe**
+python -m scripts.probe_sf_stream --hz 10 --seconds 5
+
+**With fault injection:**  
+python -m scripts.probe_sf_stream --hz 10 --seconds 5 --fault bias
+
+---
+
+### **2. Generate Dataset (SimuPy + Fault Injection)**
+python -m scripts.generate_dataset \
+    --from-simupyflight \
+    --cycles 30 \
+    --fault-types bias drift dropout \
+    --output data/simupyflight/
+
+**Output files include:**  
+raw_telemetry.csv  
+fault_injected.csv  
+labels.csv  
+metadata.json
+
+---
+
+### **3. Train Random Forest Classifier**
+python -m scripts.train_rf --input data/simupyflight/
+
+**Produces:**  
+rf_model.pkl  
+confusion_matrix.png  
+feature_importance.png
+
+---
+
+### **4. Run Real-Time Fault Monitor**
+python -m framework.runtime_monitor --model rf_model.pkl
+
+---
+
+## ** Experimental Results (Placeholder)**
+
+| Metric     | Value |
+|------------|-------|
+| Accuracy   | TBD   |
+| Precision  | TBD   |
+| Recall     | TBD   |
+| F1 Score   | TBD   |
+
+---
+
+## ** How to Cite**
+
+### **NASA SimuPy-Flight Toolkit**  
+NASA Engineering and Safety Center (NESC), ARC-18618-1.
+
+### **This Work**
+V. S. Devarajulu, "AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using SimuPy and Random Forest," IEEE Aerospace Conference, Montana, 2026.
+
+**DOI:** https://doi.org/10.5281/zenodo.17626179
+
+---
+
+## ** Acknowledgments**
+This work uses NASA’s SimuPy-Flight Vehicle Toolkit, enabling open and reproducible aerospace simulation research.
 
 
-Key Features
-1. NASA SimuPy-Flight Attitude Dynamics
 
-High-fidelity nonlinear spacecraft simulation
-
-Exposes angular rates (p, q, r) and quaternion attitude
-
-Extendable to actuators, thermal, power, comms
-
-2. Fault Injection Engine
-
-Supports all major spacecraft anomaly types:
-
-Bias
-
-Drift
-
-Spike
-
-Dropout
-
-Saturation
-
-Thermal imbalance (paper-discussed)
-
-Power-bus fluctuations (paper-discussed)
-
-3. Random Forest Fault Detection
-
-100-tree RF classifier with probability output
-
-Feature importance analysis
-
-Sub-system sensitivity evaluation
-
-4. Runtime Monitor
-
-Live anomaly scoring
-
-Threshold selection (target FPR ≤ 1%)
-
-3-frame hold to suppress noise
-
-Suitable for onboard autonomy loops
-
-5. Performance Metrics (Paper-Aligned)
-
-All final results match the PDF submission:
-
-Metric	Result
-ROC-AUC	1.000
-PR-AUC	1.000
-Detection Latency	≈ 0.70 s
-False Alarm Rate	0 per hour
-Confusion Matrix	Perfect classification (no FP/FN)
-📊 Reproducible Figures (Included)
-
-The following figures are generated exactly from the scripts:
-
-Figure 2 — Feature Importances (Random Forest)
-
-(Matches: feat_2 > feat_0 > feat_1 > quaternions)
-
-Figure 3 — Confusion Matrix
-
-Perfect separation of fault vs. nominal.
-
-Figure 4 — Fault Probability vs Time
-
-Shows RF probability rising sharply when bias fault begins.
-
-Figure 5 — Precision-Recall Curve (AUC = 1.0)
-
-Resilient under class imbalance.
-
-Figure 6 — ROC Curve (AUC = 1.0)
-
-Threshold-independent performance.
-
-All figures are in figures/ folder as .png and .pdf (conference-ready).
-
-🧪 How to Reproduce Results
-1. Generate SimuPy-Flight telemetry
-python -m scripts.generate_simupy_dataset --seconds 60 --hz 50 --out data/raw/sf_nominal.csv
-python -m scripts.generate_simupy_dataset --seconds 60 --hz 50 \
-    --fault bias --fault-start 10 --fault-end 20 \
-    --out data/raw/sf_bias.csv
-
-2. Merge datasets
-python -m scripts.generate_dataset
-
-3. Train Random Forest model
-python -m scripts.train_rf
-
-4. Evaluate
-python -m scripts.evaluate
-
-5. Generate PR/ROC
-python -m scripts.metrics_roc_pr
-
-6. Measure latency + false alarm rate
-python -m scripts.latency_eval
-python -m scripts.false_alarm_rate
-
-📜 License
-
-This project is released under the MIT License.
-
-NASA SimuPy-Flight is used under its original license (NASA Open Source Agreement).
-
-✉️ Contact
-
-For questions related to the paper or codebase, please contact:
-Vishnupriya S. Devarajulu
 (GitHub: Vishnupriya-Navigator)
