@@ -293,6 +293,25 @@ The confusion matrix provides a visual summary of classification performance ove
 
 If additional figures (e.g., ROC curves, PR curves, probability vs. time) are produced during experimentation, they should be added to `figures/` and referenced here with appropriate captions.
 
+### Figure 4 — ROC Curve
+![ROC Curve](figures/roc_curve.png)
+
+### Figure 5 — Precision-Recall Curve
+![PR Curve](figures/pr_curve.png)
+
+### Figure 6 — Fault Probability vs Time
+![Fault Probability](figures/fault_probability.png)
+
+### Figure 4 — ROC Curve
+![ROC Curve](figures/roc_curve.png)
+
+### Figure 5 — Precision-Recall Curve
+![PR Curve](figures/pr_curve.png)
+
+### Figure 6 — Fault Probability vs Time
+![Fault Probability](figures/fault_probability.png)
+
+
 ---
 
 ## 9. Reproducibility Guide
