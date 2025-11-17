@@ -73,6 +73,8 @@ The following diagram represents the processing pipeline:
      ┌──────────────────────────────────────┐
      │ Runtime Fault Monitor (probability)  │
      └──────────────────────────────────────┘
+
+```
 ---
 
 ## **Repository Structure**
