@@ -42,7 +42,7 @@ The following diagram represents the full processing pipeline used throughout th
 
 ---
 
-##  **Repository Structure**
+##  **Pipeline Structure**
 
 The following diagram illustrates the end-to-end pipeline:
 
@@ -84,7 +84,7 @@ The following diagram illustrates the end-to-end pipeline:
 
 ## **Repository Structure**
 
-```plaintext
+
 Spacecraft_AI_Fault_Diagnostics/
 │
 ├── data/
@@ -195,6 +195,179 @@ python -m framework.runtime_monitor --model rf_model.pkl
 | F1 Score   | TBD   |
 
 ---
+
+## **Key Features**
+
+### **1. NASA SimuPy-Flight Attitude Dynamics**
+- High-fidelity nonlinear spacecraft simulation  
+- Exposes angular rates (**p, q, r**) and quaternion attitude  
+- Extendable to actuators, thermal, power, comms subsystems  
+
+### **2. Fault Injection Engine**
+Supports all major spacecraft anomaly types:
+- Bias  
+- Drift  
+- Spike  
+- Dropout  
+- Saturation  
+- Thermal imbalance *(paper-discussed)*  
+- Power-bus fluctuations *(paper-discussed)*  
+
+### **3. Random Forest Fault Detection**
+- 100-tree Random Forest classifier with probability outputs  
+- Feature importance ranking  
+- Sub-system sensitivity evaluation  
+
+### **4. Runtime Monitor**
+- Live anomaly scoring  
+- Threshold selection (target **FPR ≤ 1%**)  
+- 3-frame hold to suppress noise  
+- Suitable for onboard autonomy loops  
+
+### **5. Performance Metrics (Paper-Aligned)**
+All final results match the PDF submission:
+
+| **Metric** | **Result** |
+|-----------|------------|
+| ROC-AUC | **1.000** |
+| PR-AUC | **1.000** |
+| Detection Latency | **≈ 0.70 s** |
+| False Alarm Rate | **0 per hour** |
+| Confusion Matrix | Perfect classification (no FP/FN) |
+
+---
+
+## ** Reproducible Figures (Included)**
+
+The following figures are generated exactly from the scripts:
+
+### **Figure 2 — Feature Importances (Random Forest)**
+- Matches: feat_2 > feat_0 > feat_1 > quaternion features  
+
+### **Figure 3 — Confusion Matrix**
+- Perfect separation of fault vs. nominal  
+
+### **Figure 4 — Fault Probability vs Time**
+- RF fault probability rises sharply when bias occurs  
+
+### **Figure 5 — Precision-Recall Curve (AUC = 1.0)**
+- Robust under class imbalance  
+
+### **Figure 6 — ROC Curve (AUC = 1.0)**
+- Threshold-independent performance  
+
+All figures appear in the `figures/` directory as **.png** and **.pdf** (conference-ready).
+
+---
+
+## ** How to Reproduce Results**
+
+### **1. Generate SimuPy-Flight telemetry**
+```bash
+python -m scripts.generate_simupy_dataset --seconds 60 --hz 50 --out data/raw/sf_nominal.csv
+python -m scripts.generate_simupy_dataset --seconds 60 --hz 50 \
+    --fault bias --fault-start 10 --fault-end 20 \
+    --out data/raw/sf_bias.csv
+### **2. Merge datasets**
+```bash
+python -m scripts.generate_dataset
+3. Train Random Forest model
+bash
+Copy code
+python -m scripts.train_rf
+4. Evaluate
+bash
+Copy code
+python -m scripts.evaluate
+5. Generate PR / ROC curves
+bash
+Copy code
+python -m scripts.metrics_roc_pr
+6. Measure latency + false alarm rate
+bash
+Copy code
+python -m scripts.latency_eval
+python -m scripts.false_alarm_rate
+📜 License
+This project is released under the MIT License.
+NASA SimuPy-Flight is used under its original NASA Open Source Agreement.
+
+✉️ Contact
+For questions related to the paper or codebase, please contact:
+Vishnupriya S. Devarajulu
+
+yaml
+Copy code
+
+---
+
+⚠️ **Important:** If the bold still doesn’t work, it means you accidentally copied the outer ``` backticks.  
+ONLY copy the inside content.
+
+
+
+
+You said:
+2. Merge datasets
+python -m scripts.generate_dataset
+
+3. Train Random Forest model
+python -m scripts.train_rf
+
+4. Evaluate
+python -m scripts.evaluate
+
+5. Generate PR / ROC curves
+python -m scripts.metrics_roc_pr
+
+6. Measure latency + false alarm rate
+python -m scripts.latency_eval
+python -m scripts.false_alarm_rate
+
+📜 License
+
+This project is released under the MIT License.
+NASA SimuPy-Flight is used under its original NASA Open Source Agreement.
+
+✉️ Contact
+
+For questions related to the paper or codebase, please contact:
+Vishnupriya S. Devarajulu
+
+
+
+ChatGPT said:
+Priya — I finally understand what you want.
+You want THIS EXACT TEXT, but rewritten as Markdown headings + code blocks, NOT inside a fenced block, so GitHub renders it normally.
+
+So here is the proper Markdown version of EVERYTHING you pasted —
+No backticks wrapping the whole thing.
+100% ready to paste directly into README.md.
+
+2. Merge datasets
+bash
+Copy code
+python -m scripts.generate_dataset
+3. Train Random Forest model
+bash
+Copy code
+python -m scripts.train_rf
+4. Evaluate
+bash
+Copy code
+python -m scripts.evaluate
+5. Generate PR / ROC curves
+bash
+Copy code
+python -m scripts.metrics_roc_pr
+6. Measure latency + false alarm rate
+bash
+Copy code
+python -m scripts.latency_eval
+python -m scripts.false_alarm_rate
+ License
+This project is released under the MIT License.
+NASA SimuPy-Flight is used under its original NASA Open Source Agreement.
 
 ## ** How to Cite**
 
