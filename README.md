@@ -44,38 +44,82 @@ The following diagram represents the full processing pipeline used throughout th
 
 ## 📂 **Repository Structure**
 
-NASA_Simupy_Spacecraft_AI_Fault_Diagnostics/
+The following diagram illustrates the end-to-end pipeline:
+
+             ┌────────────────────┐
+             │ NASA SimuPy-Flight │
+             │  (Vehicle Model)   │
+             └─────────┬──────────┘
+                       │ Telemetry Stream
+                       ▼
+            ┌────────────────────────┐
+            │ Telemetry Generator    │
+            │ (Signal Extraction)    │
+            └─────────┬──────────────┘
+                      │
+                      ▼
+            ┌────────────────────────┐
+            │ Fault Injection Engine │
+            │  bias | drift | dropout│
+            └─────────┬──────────────┘
+                      │
+                      ▼
+            ┌────────────────────────┐
+            │ Dataset Builder (CSV)  │
+            └─────────┬──────────────┘
+                      │
+                      ▼
+            ┌────────────────────────┐
+            │ Machine Learning (RF)  │
+            │  Fault Classification  │
+            └─────────┬──────────────┘
+                      │
+                      ▼
+     ┌──────────────────────────────────────┐
+     │ Runtime Fault Monitor (probability)  │
+     └──────────────────────────────────────┘
+
+
+---
+
+## **Repository Structure**
+
+```plaintext
+Spacecraft_AI_Fault_Diagnostics/
+│
 ├── data/
-│ ├── raw/ # SimuPy flight logs + synthetic faults
-│ └── processed/ # Merged, labeled telemetry
+│   └── simupyflight/         # Generated telemetry + fault datasets
 │
 ├── framework/
-│ ├── adapters/
-│ │ └── simupy_flight_adapter.py # NASA SimuPy-Flight integration
-│ ├── faults/
-│ │ └── faults.py # Bias, drift, spikes, dropout, saturation
-│ ├── telemetry/
-│ │ ├── telemetry_generator.py # Nominal + faulty telemetry
-│ │ └── telemetry_logger.py # Streaming logger (50 Hz)
-│ └── models/
-│ └── rf_model.py # Random Forest classifier + loader
+│   ├── adapters/
+│   │   └── simupy_flight_adapter.py  # NASA SimuPy-Flight integration
+│   ├── telemetry_generator.py         # Extracts signals from SimuPy
+│   ├── faults.py                      # Fault injection (bias, drift, dropout)
+│   ├── dataset_builder.py             # Generates structured CSV datasets
+│   ├── random_forest_model.py         # RF training + evaluation
+│   └── runtime_monitor.py             # Real-time classification
 │
 ├── scripts/
-│ ├── generate_dataset.py # Synthetic dataset
-│ ├── generate_simupy_dataset.py # Real dynamics (NASA SimuPy-Flight)
-│ ├── train_rf.py # Train Random Forest
-│ ├── evaluate.py # Metrics + confusion matrix
-│ ├── plot_prob.py # Fault probability vs time
-│ ├── metrics_roc_pr.py # PR/ROC curves
-│ ├── latency_eval.py # Fault-detection latency
-│ └── stream_simupy.py # Real-time stream + RF inference
+│   ├── generate_dataset.py            # CLI: run SimuPy-Flight + faults
+│   ├── train_rf.py                    # Train Random Forest classifier
+│   └── probe_sf_stream.py             # Test SimuPy-Flight streaming
 │
-├── results/ # JSON and CSV outputs
-├── figures/ # Final publication-ready plots
-├── models/ # Trained joblib models
+├── figures/
+│   ├── architecture.png
+│   ├── confusion_matrix.png
+│   └── feature_importance.png
+│
 ├── requirements.txt
 └── README.md
 
+
+git clone https://github.com/<your-username>/Spacecraft_AI_Fault_Diagnostics
+cd Spacecraft_AI_Fault_Diagnostics
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip install -r requirements.txt
 
 
 
