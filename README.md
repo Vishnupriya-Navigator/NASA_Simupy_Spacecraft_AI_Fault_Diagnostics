@@ -38,32 +38,73 @@ All results in the paper can be reproduced exactly using this repository.
 
 ##  **Pipeline Structure**
 
-(ASCII diagram omitted for brevity—user can insert as needed)
+The following diagram represents the processing pipeline:
 
+```text
+             ┌────────────────────┐
+             │ NASA SimuPy-Flight │
+             │  (Vehicle Model)   │
+             └─────────┬──────────┘
+                       │ Telemetry Stream
+                       ▼
+            ┌────────────────────────┐
+            │ Telemetry Generator    │
+            │ (Signal Extraction)    │
+            └─────────┬──────────────┘
+                      │
+                      ▼
+            ┌────────────────────────┐
+            │ Fault Injection Engine │
+            │  bias | drift | dropout│
+            └─────────┬──────────────┘
+                      │
+                      ▼
+            ┌────────────────────────┐
+            │ Dataset Builder (CSV)  │
+            └─────────┬──────────────┘
+                      │
+                      ▼
+            ┌────────────────────────┐
+            │ Machine Learning (RF)  │
+            │  Fault Classification  │
+            └─────────┬──────────────┘
+                      │
+                      ▼
+     ┌──────────────────────────────────────┐
+     │ Runtime Fault Monitor (probability)  │
+     └──────────────────────────────────────┘
 ---
 
 ## **Repository Structure**
 
 ```plaintext
 Spacecraft_AI_Fault_Diagnostics/
+│
 ├── data/
-│   └── simupyflight/
+│   └── simupyflight/                 # Generated telemetry + fault datasets
+│
 ├── framework/
 │   ├── adapters/
-│   ├── telemetry_generator.py
-│   ├── faults.py
-│   ├── dataset_builder.py
-│   ├── random_forest_model.py
-│   └── runtime_monitor.py
+│   │   └── simupy_flight_adapter.py  # NASA SimuPy-Flight integration
+│   ├── telemetry_generator.py        # Extracts signals from SimuPy
+│   ├── faults.py                     # Fault injection (bias, drift, dropout)
+│   ├── dataset_builder.py            # Generates structured CSV datasets
+│   ├── random_forest_model.py        # RF training + evaluation
+│   └── runtime_monitor.py            # Real-time classification
+│
 ├── scripts/
-│   ├── generate_dataset.py
-│   ├── train_rf.py
-│   └── probe_sf_stream.py
+│   ├── generate_dataset.py           # CLI: run SimuPy-Flight + faults
+│   ├── train_rf.py                   # Train Random Forest classifier
+│   └── probe_sf_stream.py            # Test SimuPy-Flight streaming
+│
 ├── figures/
+│   ├── architecture.png              # System architecture diagram
+│   ├── confusion_matrix.png          # RF confusion matrix
+│   └── feature_importance.png        # RF feature importance bar chart
+│
 ├── requirements.txt
 └── README.md
 ```
-
 ---
 
 ## **Installation**
