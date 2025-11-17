@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite it as below."
+title: "AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using NASA SimuPy and Random Forest"
+type: software
+version: "1.0.0"
+authors:
+  - family-names: "Devarajulu"
+    given-names: "Vishnupriya S."
+    affiliation: "SOFTWARE ENGINEER / NASA Navigator, USA"
+repository-code: "https://github.com/Vishnupriya-Navigator/NASA_Simupy_Spacecraft_AI_Fault_Diagnostics"
+license: "MIT"
+keywords:
+  - spacecraft
+  - fault detection
+  - anomaly detection
+  - Random Forest
+  - SimuPy
+  - SimuPy-Flight
+  - NASA
+date-released: "2025-11-16"
+preferred-citation:
+  type: conference-paper
+  title: "AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using SimuPy and Random Forest"
+  authors:
+    - family-names: "Devarajulu"
+      given-names: "Vishnupriya S."
+  conference:
+    name: "IEEE Aerospace Conference"
+    location: "Big Sky, Montana, USA"
+  year: 2026
