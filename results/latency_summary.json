@@ -1,0 +1,7 @@
+{
+  "threshold": 0.6067,
+  "hold": 3,
+  "fault_start_s": 4.0,
+  "hz": 10.0,
+  "latency_s": 0.7
+}

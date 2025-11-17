@@ -1,0 +1,8 @@
+{
+  "threshold": 0.6067,
+  "hold": 3,
+  "hz": 50,
+  "seconds": 900,
+  "triggers": 0,
+  "false_alarms_per_hour": 0.0
+}

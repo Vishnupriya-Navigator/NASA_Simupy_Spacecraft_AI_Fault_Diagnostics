@@ -1,0 +1,19 @@
+{
+  "roc_auc": 1.0,
+  "pr_auc": 1.0,
+  "target_fpr": 0.01,
+  "threshold": 0.6066666666666667,
+  "tpr_at_threshold": 1.0,
+  "fpr_at_threshold": 0.0,
+  "precision_at_threshold": 1.0,
+  "confusion_matrix": {
+    "tn": 5499,
+    "fp": 0,
+    "fn": 0,
+    "tp": 501
+  },
+  "plots": {
+    "roc": "figures/roc_curve.png",
+    "pr": "figures/pr_curve.png"
+  }
+}
