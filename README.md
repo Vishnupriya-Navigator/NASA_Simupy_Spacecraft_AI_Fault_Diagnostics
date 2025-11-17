@@ -42,7 +42,7 @@ The following diagram represents the full processing pipeline used throughout th
 
 ---
 
-## 📂 **Repository Structure**
+##  **Repository Structure**
 
 The following diagram illustrates the end-to-end pipeline:
 
@@ -113,7 +113,7 @@ Spacecraft_AI_Fault_Diagnostics/
 └── README.md
 
 
-## ** Installation**
+**## ** Installation****
 
 ### **1. Clone repository**
 git clone https://github.com/<your-username>/Spacecraft_AI_Fault_Diagnostics  
