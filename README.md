@@ -1,4 +1,4 @@
-# 🚀 NASA SimuPy Spacecraft AI Fault Diagnostics
+# NASA SimuPy Spacecraft AI Fault Diagnostics
 ### *AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using NASA SimuPy-Flight and Random Forest*
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
@@ -28,7 +28,7 @@ All results in the paper can be reproduced exactly using this repository.
 
 ---
 
-## 🛰 **2. System Architecture**
+## **2. System Architecture**
 
 Figure 1 illustrates the high-level architecture of the framework.
 
@@ -282,35 +282,40 @@ The following metrics are representative of the results reported in the associat
 ### 8.2 Figures
 
 **Figure 2 – Feature Importances (Random Forest)**  
-![Feature Importances](figures/feature_importance.png)
+![Feature Importances](figures/FeatureImportance.png)
 
 This figure highlights the most influential features contributing to the RF decisions, enabling subsystem-level interpretability.
 
 **Figure 3 – Confusion Matrix**  
-![Confusion Matrix](figures/confusion_matrix.png)
+![Confusion Matrix](figures/ConfusionMatrix.png)
 
 The confusion matrix provides a visual summary of classification performance over the evaluation set.
 
 If additional figures (e.g., ROC curves, PR curves, probability vs. time) are produced during experimentation, they should be added to `figures/` and referenced here with appropriate captions.
 
 ### Figure 4 — ROC Curve
-![ROC Curve](figures/roc_curve.png)
+![ROC Curve](figures/ROCCurve.png)
 
 ### Figure 5 — Precision-Recall Curve
-![PR Curve](figures/pr_curve.png)
+![PR Curve](figures/PrecisionRecallCurve.png)
 
 ### Figure 6 — Fault Probability vs Time
-![Fault Probability](figures/fault_probability.png)
+![Fault Probability](figures/FaultProbability_Time.png)
 
-### Figure 4 — ROC Curve
-![ROC Curve](figures/roc_curve.png)
+### Figure 7 — Propulsion Deviation
+![ROC Curve](figures/PropulsionDeviation.png)
 
-### Figure 5 — Precision-Recall Curve
-![PR Curve](figures/pr_curve.png)
+### Figure 8 — Thermal Control
+![PR Curve](figures/ThermalControl.png)
 
-### Figure 6 — Fault Probability vs Time
-![Fault Probability](figures/fault_probability.png)
+### Figure 9 — BER Classification
+![Fault Probability](figures/BERClassification.png)
 
+### Figure 10 — Torque Deviation
+![ROC Curve](figures/TorqueDeviation.png)
+
+### Figure 11 — Voltage Anomaly
+![PR Curve](figures/VoltageAnomaly.png)
 
 ---
 
