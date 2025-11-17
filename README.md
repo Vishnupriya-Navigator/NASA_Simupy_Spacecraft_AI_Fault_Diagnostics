@@ -1,80 +1,83 @@
-AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using SimuPy and Random Forest
-Reproducible Architecture • NASA SimuPy-Flight Integration • Random Forest Anomaly Detection • Conference-Ready Codebase
+# 🚀 NASA SimuPy Spacecraft AI Fault Diagnostics  
+### *AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using NASA SimuPy-Flight and Random Forest*
 
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![License: MIT](https://img.shields.io/badge/License-MIT-green)
+![Status](https://img.shields.io/badge/Status-Research_Prototype-orange)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17626179.svg)](https://doi.org/10.5281/zenodo.17626179)
 
+---
 
-🛰️ Overview
+## **Abstract**
 
-This repository contains the complete implementation for the paper:
+Modern spacecraft rely heavily on autonomous onboard software to ensure safe guidance, navigation, control, thermal balance, power stability, and communications.  
+Small deviations in telemetry can indicate critical faults that must be detected early.
 
-AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using SimuPy and Random Forest
-(Submitted to the IEEE Aerospace Conference, 2026 – Montana)
+This repository contains the **complete implementation** for our paper:
 
-The project integrates NASA's SimuPy-Flight Vehicle Toolkit with a Random Forest–based anomaly detection pipeline to create a fully reproducible spacecraft fault-diagnostics framework.
-The codebase includes:
+### **AI-Driven Fault Detection & Reliability Diagnostics for Spacecraft Using SimuPy and Random Forest**  
+*(Submitted to the IEEE Aerospace Conference, 2026 – Montana)*
 
-Physics-based spacecraft simulation (attitude, rates, actuators, subsystems)
+The framework integrates:  
+- **NASA's SimuPy-Flight Vehicle Toolkit** for high-fidelity dynamics  
+- **Random Forest–based anomaly detection**  
+- **Telemetry simulation + fault injection**  
+- **Real-time fault-probability estimation**  
+- **Mission-critical feedback loop**  
+- **Reproducible metrics and figures (PR/ROC, confusion matrix, feature importances)**
 
-Fault injection engine (bias, drift, spikes, dropout, saturation)
+All results in the paper can be reproduced exactly using this repository.
 
-Telemetry generation (nominal + faulty)
+---
 
-Random Forest classifier training + evaluation
+## 🛰 **System Architecture**
 
-Runtime anomaly detection with latency measurement
+The following diagram represents the full processing pipeline used throughout the experiments:
 
-Mission-critical feedback loop
+> *(Insert your generated architecture diagram here as `figures/architecture.png`)*  
+> Example:  
+> ```md
+> ![Architecture](figures/architecture.png)
+> ```
 
-Publication-ready figures (feature importances, confusion matrix, fault probability vs. time, PR/ROC curves)
+---
 
-All results presented in the paper can be reproduced exactly using this repository.
+## 📂 **Repository Structure**
 
-📁 Repository Structure
 NASA_Simupy_Spacecraft_AI_Fault_Diagnostics/
+├── data/
+│ ├── raw/ # SimuPy flight logs + synthetic faults
+│ └── processed/ # Merged, labeled telemetry
 │
 ├── framework/
-│   ├── adapters/
-│   │   └── simupy_flight_adapter.py          # NASA SimuPy-Flight integration
-│   ├── faults/
-│   │   └── faults.py                         # Bias, drift, dropout, spike, saturation
-│   ├── telemetry/
-│   │   └── telemetry_generator.py            # Nominal + faulty telemetry
-│   └── models/
-│       └── rf_model.py                       # Random Forest model + loader
+│ ├── adapters/
+│ │ └── simupy_flight_adapter.py # NASA SimuPy-Flight integration
+│ ├── faults/
+│ │ └── faults.py # Bias, drift, spikes, dropout, saturation
+│ ├── telemetry/
+│ │ ├── telemetry_generator.py # Nominal + faulty telemetry
+│ │ └── telemetry_logger.py # Streaming logger (50 Hz)
+│ └── models/
+│ └── rf_model.py # Random Forest classifier + loader
 │
 ├── scripts/
-│   ├── generate_dataset.py                   # Synthetic dataset (baseline)
-│   ├── generate_simupy_dataset.py            # Real dynamics dataset via SimuPy-Flight
-│   ├── train_rf.py                           # Train RF classifier
-│   ├── evaluate.py                           # Classification report + confusion matrix
-│   ├── stream_simupy.py                      # Runtime streaming + fault probability
-│   ├── stream_simupy_log.py                  # Stream + log to CSV
-│   ├── metrics_roc_pr.py                     # ROC + PR curves (AUC calculation)
-│   ├── latency_eval.py                       # Fault detection latency
-│   ├── false_alarm_rate.py                   # False alarm rate calculation
-│   └── plot_prob.py                          # Fault probability vs. time plot
+│ ├── generate_dataset.py # Synthetic dataset
+│ ├── generate_simupy_dataset.py # Real dynamics (NASA SimuPy-Flight)
+│ ├── train_rf.py # Train Random Forest
+│ ├── evaluate.py # Metrics + confusion matrix
+│ ├── plot_prob.py # Fault probability vs time
+│ ├── metrics_roc_pr.py # PR/ROC curves
+│ ├── latency_eval.py # Fault-detection latency
+│ └── stream_simupy.py # Real-time stream + RF inference
 │
-├── data/
-│   ├── raw/                                  # CSV telemetry files
-│   └── processed/                            # Merged dataset for training
-│
-├── results/
-│   ├── metrics_summary.json
-│   ├── latency_summary.json
-│   ├── eval_report.json
-│   ├── feature_importances_simupy.csv
-│   └── confusion_matrix_*.csv
-│
-├── figures/                                  # Final paper-quality plots
-│   ├── feature_importances.png / .pdf
-│   ├── confusion_matrix.png / .pdf
-│   ├── fault_prob_vs_time.png / .pdf
-│   ├── pr_curve.png / .pdf
-│   └── roc_curve.png / .pdf
-│
-├── LICENSE                                   # MIT License
+├── results/ # JSON and CSV outputs
+├── figures/ # Final publication-ready plots
+├── models/ # Trained joblib models
+├── requirements.txt
 └── README.md
+
+
+
 
 Key Features
 1. NASA SimuPy-Flight Attitude Dynamics
