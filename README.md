@@ -110,10 +110,11 @@ Spacecraft_AI_Fault_Diagnostics/
 │   └── feature_importance.png
 │
 ├── requirements.txt
-└── README.md
+└── README.md ```
 
 
-**## ** Installation****
+
+## ** Installation**
 
 ### **1. Clone repository**
 git clone https://github.com/<your-username>/Spacecraft_AI_Fault_Diagnostics  
